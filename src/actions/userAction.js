@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 import { URL_API } from "../helper"
 
@@ -18,3 +19,45 @@ export const getUsers = () => {
  * 2. Jika user ada maka simpan datanya ke reducer dan disimpan di asyncstorage
  * 3. console.log('userNotFOund')
  */
+
+export const onLogin = (username, password) => {
+    return (dispatch) => {
+        console.log('Data action :', username, password)
+        axios.get(URL_API + `/users?username=${username}&password=${password}`)
+            .then(res => {
+                if (res.data.length > 0) {
+                    // mengirim data ke reducer
+                    console.log("Data login", res.data[0])
+                    dispatch({
+                        type: "USER_LOGIN",
+                        payload: res.data[0]
+                    })
+                    AsyncStorage.setItem("id_tkn", `${res.data[0].id}`)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+    }
+}
+
+
+export const onKeepLogin = () => {
+    return async (dispatch) => {
+        try {
+            let tkn = await AsyncStorage.getItem("id_tkn")
+            console.log('cek keeplogin',tkn)
+            let res = await axios.get(URL_API + `/users?id=${tkn}`)
+            if (res.data.length > 0) {
+                // mengirim data ke reducer
+                console.log("Data keep login", res.data[0])
+                dispatch({
+                    type: "USER_LOGIN",
+                    payload: res.data[0]
+                })
+                AsyncStorage.setItem("id_tkn", `${res.data[0].id}`)
+            }
+        } catch (error) {
+            console.log(err)
+        }
+    }
+}
