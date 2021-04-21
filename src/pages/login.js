@@ -18,20 +18,20 @@ const LoginPage = (props) => {
     const [password, setPassword] = useState('')
 
     // useEffect : pengganti componentDidMount
-    useEffect(() => {
-        // menjalankan fungsi action
-        dispatch(getUsers())
-        setTimeout(() => setLogin(true), 3000)
-        AsyncStorage.removeItem('id_tkn')
-    }, [])
-
+    // useEffect(async() => {
+    //     // // menjalankan fungsi action
+    //     // dispatch(getUsers())
+    //     // AsyncStorage.removeItem('id_tkn')
+    // }, [])
+    setTimeout(() => setLogin(true), 3000)
+    
     // useSelctor : pengganti mapStateToProps pada class component
     const { iduser } = useSelector(({ userReducer }) => {
         return {
             iduser: userReducer.id
         }
     })
-
+    
     // useEffect : pengganti componentDidUpdate
     useEffect(() => {
         console.log("data dari reducer :", iduser)
@@ -69,7 +69,8 @@ const LoginPage = (props) => {
                             onPress={btLogin} containerStyle={{ width: wp(30) }} />
                     </View>
                 </View>
-                <Text style={{ backgroundColor: 'white', textAlign: 'center', padding: hp(1) }}>Not have account ? <Text style={{ color: 'skyblue', fontWeight: 'bold' }}>Regis Now</Text> </Text>
+                <Text style={{ backgroundColor: 'white', textAlign: 'center', padding: hp(1) }}>Not have account ?
+                <Text style={{ color: 'skyblue', fontWeight: 'bold' }} onPress={() => props.navigation.navigate("Regis")}>Regis Now</Text> </Text>
             </>
         )
     }

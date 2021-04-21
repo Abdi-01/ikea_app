@@ -45,7 +45,7 @@ export const onKeepLogin = () => {
     return async (dispatch) => {
         try {
             let tkn = await AsyncStorage.getItem("id_tkn")
-            console.log('cek keeplogin',tkn)
+            console.log('cek keeplogin', tkn)
             let res = await axios.get(URL_API + `/users?id=${tkn}`)
             if (res.data.length > 0) {
                 // mengirim data ke reducer
@@ -59,5 +59,29 @@ export const onKeepLogin = () => {
         } catch (error) {
             console.log(err)
         }
+    }
+}
+
+export const onRegis = (username, email, password, confpassword) => {
+    return (dispatch) => {
+        axios.post(URL_API + `/users`, {
+            username,
+            email,
+            password,
+            role: 'user'
+        }).then(resPost => {
+            // alert("regis success")
+            console.log(resPost.data)
+            // jika sudah ada id, maka redirect ke home atau auto login
+            if (resPost.data.id) {
+                dispatch({
+                    type: "USER_LOGIN",
+                    payload: resPost.data
+                })
+                AsyncStorage.setItem("id_tkn", `${resPost.data.id}`)
+            }
+        }).catch(errPost => {
+            console.log(errPost)
+        })
     }
 }
