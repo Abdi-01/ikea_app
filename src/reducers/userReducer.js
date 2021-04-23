@@ -14,6 +14,10 @@ export const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state, ...action.payload, loading: false
             }
+        case "UPDATE_CART":
+            return {
+                ...state, cart: action.payload
+            }
         case "LOADING":
             return { ...state, loading: true }
         default:

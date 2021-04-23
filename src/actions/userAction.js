@@ -85,3 +85,10 @@ export const onRegis = (username, email, password, confpassword) => {
         })
     }
 }
+
+export const updateCart = (data) => {
+    return {
+        type: "UPDATE_CART",
+        payload: data
+    }
+}

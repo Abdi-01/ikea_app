@@ -4,6 +4,9 @@ import { Image, View, FlatList, Alert } from 'react-native';
 import { Button, Card, Text, Icon, Input, Overlay } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import axios from 'axios';
+import { URL_API } from '../helper'
+import { updateCart } from '../actions/userAction';
 export default (props) => {
     const { detail } = props.route.params
 
@@ -25,17 +28,35 @@ export default (props) => {
     // fungsi tambah barang ke cart
     const onBtAddToCart = () => {
         // console.log(selected)
-        if (parseInt(qty) > parseInt(selected.split('-')[1])) {
+        if (parseInt(qty) > parseInt(selected.split('-')[1])) { // L-12 split by "-" --> ["L","12"]
             Alert.alert('Qty melebihi stock')
         } else {
             // fungsi patch
+            cart.push({
+                nama: detail.nama,
+                type: selected.split('-')[0],
+                image: detail.images[0],
+                qty: parseInt(qty),
+                harga: detail.harga,
+                subTotal: parseInt(qty) * parseInt(detail.harga),
+            })
+            console.log(cart)
+            axios.patch(URL_API + `/users/${iduser}`, { cart })
+                .then(res => {
+                    console.log("Add to cart success", res.data)
+                    dispatch(updateCart(res.data.cart))
+                    setVisible(!visible)
+                }).catch(err => {
+                    console.log(err)
+                })
         }
     }
 
     const dispatch = useDispatch()
-    const { iduser } = useSelector(({ userReducer }) => {
+    const { iduser, cart } = useSelector(({ userReducer }) => {
         return {
-            iduser: userReducer.id
+            iduser: userReducer.id,
+            cart: userReducer.cart
         }
     })
     return (
