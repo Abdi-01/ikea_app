@@ -37,7 +37,7 @@ const LoginPage = (props) => {
         console.log("data dari reducer :", iduser)
         if (iduser) {
             // page login yg awalnya menjadi page pertama, digantikan oleh page home
-            props.navigation.dispatch(StackActions.replace("Home"))
+            props.navigation.dispatch(StackActions.replace("TabNav"))
         }
     })
 

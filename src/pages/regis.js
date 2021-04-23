@@ -31,7 +31,7 @@ const RegisPage = (props) => {
             // page login yg awalnya menjadi page pertama, digantikan oleh page home
             props.navigation.reset({
                 index: 0,
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'TabNav' }],
               })
         }
     })

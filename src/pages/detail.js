@@ -1,11 +1,36 @@
-import React from 'react';
-import { CardItem, Left, Right } from 'native-base';
-import { Image, View, FlatList } from 'react-native';
-import { Button, Card, Text, Icon } from 'react-native-elements';
+import React, { useState } from 'react';
+import { Container, Header, Content, Form, Item, Picker, CardItem } from 'native-base';
+import { Image, View, FlatList, Alert } from 'react-native';
+import { Button, Card, Text, Icon, Input, Overlay } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 export default (props) => {
     const { detail } = props.route.params
+
+    const [selected, setSelected] = useState(`${detail.stock[0].type}-${detail.stock[0].qty}`)
+    const [visible, setVisible] = useState(false);
+    const [qty, setQty] = useState('');
+
+    // ambil data dari select options
+    const onValueChange = (value) => {
+        console.log(value)
+        setSelected(value);
+    }
+
+    // fungsi buka tutup modal / overlay
+    const toggleOverlay = () => {
+        setVisible(!visible);
+    };
+
+    // fungsi tambah barang ke cart
+    const onBtAddToCart = () => {
+        // console.log(selected)
+        if (parseInt(qty) > parseInt(selected.split('-')[1])) {
+            Alert.alert('Qty melebihi stock')
+        } else {
+            // fungsi patch
+        }
+    }
 
     const dispatch = useDispatch()
     const { iduser } = useSelector(({ userReducer }) => {
@@ -26,6 +51,24 @@ export default (props) => {
                     showsHorizontalScrollIndicator={false}
                 />
             </View>
+            <Overlay isVisible={visible} onBackdropPress={toggleOverlay} >
+                <Input keyboardType="numeric" placeholder="Masukkan jumlah barang" containerStyle={{ width: wp(75) }}
+                    onChangeText={value => setQty(value)}
+                />
+                <Button icon={
+                    <Icon
+                        name="plus-square"
+                        type="feather"
+                        size={20}
+                        color="#FBD914"
+                        containerStyle={{ marginHorizontal: wp(2) }}
+                    />
+                }
+                    type="clear"
+                    onPress={onBtAddToCart}
+                    containerStyle={{ width: wp(50), alignSelf: 'center' }} titleStyle={{ color: '#FBD914' }}
+                    title="Tambahkan" />
+            </Overlay>
             <View style={{ flex: 1, alignItems: 'center', marginTop: hp("-8%") }}>
                 <Card containerStyle={{ flex: 1, borderTopRightRadius: 30, borderTopLeftRadius: 30, width: wp(100) }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", color: 'gray', textAlign: 'right' }}>{detail.kategori}</Text>
@@ -36,6 +79,27 @@ export default (props) => {
                     </View>
                     <Text style={{ borderBottomWidth: 0.5, borderBottomColor: 'gray', color: 'gray', marginTop: hp(2) }}>Deskripsi</Text>
                     <Text style={{ textAlign: 'justify', marginVertical: 10 }}>{detail.deskripsi}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={{ width: wp(40), borderBottomWidth: 0.5, borderBottomColor: 'gray', color: 'gray', marginTop: hp(1) }}>Tipe</Text>
+                        <Form>
+                            <Item picker>
+                                <Picker
+                                    mode="dialog"
+                                    // iosIcon={<Icon name="arrow-down" />}
+                                    style={{ width: wp(50), height: hp(5) }}
+                                    placeholder="Pilih tipe"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={selected}
+                                    onValueChange={onValueChange}
+                                >
+                                    {detail.stock.map((item, index) => {
+                                        return <Picker.Item label={`${item.type} Stock : ${item.qty}`} value={`${item.type}-${item.qty}`} />
+                                    })}
+                                </Picker>
+                            </Item>
+                        </Form>
+                    </View>
                 </Card>
             </View>
             <Button icon={
@@ -47,6 +111,7 @@ export default (props) => {
                     containerStyle={{ marginHorizontal: wp(4) }}
                 />
             }
+                onPress={toggleOverlay}
                 containerStyle={{ width: wp(100), alignSelf: 'center', backgroundColor: '#0058AB' }} titleStyle={{ color: '#FBD914' }}
                 title="Add to cart" />
         </View>
