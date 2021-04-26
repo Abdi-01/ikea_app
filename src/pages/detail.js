@@ -46,6 +46,7 @@ export default (props) => {
                     console.log("Add to cart success", res.data)
                     dispatch(updateCart(res.data.cart))
                     setVisible(!visible)
+                    props.navigation.navigate("Cart")
                 }).catch(err => {
                     console.log(err)
                 })
