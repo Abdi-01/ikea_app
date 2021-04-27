@@ -7,6 +7,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import axios from 'axios';
 import { URL_API } from '../helper'
 import { updateCart } from '../actions/userAction';
+
 export default (props) => {
     const { detail } = props.route.params
 
@@ -62,7 +63,18 @@ export default (props) => {
     })
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
+            {/* <Icon name="user" type="feather" size={20} /> */}
             <View style={{ height: hp("50%"), width: wp("100%") }}>
+                <Icon
+                    raised
+                    name='arrow-left'
+                    type='font-awesome'
+                    color="#0058AB"
+                    reverse
+                    size={18}
+                    onPress={() => props.navigation.goBack()}
+                    containerStyle={{ marginTop: hp(5), position: 'absolute', zIndex:20, paddingLeft:-5 }}
+                />
                 <FlatList
                     data={detail.images}
                     renderItem={({ item }) => (
@@ -92,23 +104,17 @@ export default (props) => {
                     title="Tambahkan" />
             </Overlay>
             <View style={{ flex: 1, alignItems: 'center', marginTop: hp("-8%") }}>
-                <Card containerStyle={{ flex: 1, borderTopRightRadius: 30, borderTopLeftRadius: 30, width: wp(100) }}>
+                <Card containerStyle={{ flex: 1, borderTopRightRadius: 40, borderTopLeftRadius: 40, width: wp(100) }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", color: 'gray', textAlign: 'right' }}>{detail.kategori}</Text>
                     <Text h3>{detail.nama}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         {/* <Text h4>Stock : {detail.stok}</Text> */}
-                        <Text style={{ fontWeight: "bold", color: '#0058AB', fontSize: 25 }}>IDR. {detail.harga}</Text>
-                    </View>
-                    <Text style={{ borderBottomWidth: 0.5, borderBottomColor: 'gray', color: 'gray', marginTop: hp(2) }}>Deskripsi</Text>
-                    <Text style={{ textAlign: 'justify', marginVertical: 10 }}>{detail.deskripsi}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={{ width: wp(40), borderBottomWidth: 0.5, borderBottomColor: 'gray', color: 'gray', marginTop: hp(1) }}>Tipe</Text>
-                        <Form>
+                        <Text style={{ fontWeight: "bold", color: '#0058AB', fontSize: 25 }}>IDR. {detail.harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Text>
+                        <Form style={{ borderWidth: 1, borderRadius: 20, borderColor: '#FBD914' }}>
                             <Item picker>
                                 <Picker
                                     mode="dialog"
-                                    // iosIcon={<Icon name="arrow-down" />}
-                                    style={{ width: wp(50), height: hp(5) }}
+                                    style={{ width: wp(40), height: hp(4) }}
                                     placeholder="Pilih tipe"
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"
@@ -122,20 +128,27 @@ export default (props) => {
                             </Item>
                         </Form>
                     </View>
+                    {/* <Text style={{ borderBottomWidth: 0.5, borderBottomColor: 'gray', color: 'gray', marginTop: hp(2) }}>Deskripsi</Text> */}
+                    <View style={{ height: hp(25), marginTop: hp(4) }}>
+                        <Text style={{ textAlign: 'justify', color: 'gray' }}>{detail.deskripsi}</Text>
+                    </View>
+                    <Button icon={
+                        <Icon
+                            name="shopping-cart"
+                            type="feather"
+                            size={20}
+                            color="#FBD914"
+                            containerStyle={{ marginHorizontal: wp(4) }}
+                        />
+                    }
+
+                        onPress={toggleOverlay}
+                        containerStyle={{ width: wp(70), alignSelf: 'center', borderRadius: 20 }}
+                        buttonStyle={{ backgroundColor: '#0058AB' }}
+                        titleStyle={{ color: '#FBD914' }}
+                        title="Add to cart" />
                 </Card>
             </View>
-            <Button icon={
-                <Icon
-                    name="shopping-cart"
-                    type="feather"
-                    size={15}
-                    color="#FBD914"
-                    containerStyle={{ marginHorizontal: wp(4) }}
-                />
-            }
-                onPress={toggleOverlay}
-                containerStyle={{ width: wp(100), alignSelf: 'center', backgroundColor: '#0058AB' }} titleStyle={{ color: '#FBD914' }}
-                title="Add to cart" />
         </View>
     );
 }

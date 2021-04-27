@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, FlatList, ImageBackground,TouchableWithoutFeedback } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, FlatList, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { Header, Icon, SearchBar } from 'react-native-elements'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { URL_API } from '../helper'
@@ -16,7 +16,7 @@ const style = StyleSheet.create({
         marginLeft: wp(-5)
     },
     inputSearch: {
-        height: hp(5),
+        height: hp(3),
         backgroundColor: 'white'
     }
 })
@@ -54,9 +54,9 @@ const HomePage = (props) => {
         return products.map((e, index) => {
             return (
                 // <TouchableWithoutFeedback key={index}>
-                    <View style={{ width: wp('50%') }}>
-                        <CardProducts name={e.nama} image={e.images[0]} price={e.harga} btDetail={() => props.navigation.navigate('Detail', { detail: e })}/>
-                    </View>
+                <View style={{ width: wp('50%') }}>
+                    <CardProducts name={e.nama} image={e.images[0]} price={e.harga} btDetail={() => props.navigation.navigate('Detail', { detail: e })} />
+                </View>
                 // </TouchableWithoutFeedback>
             )
         })

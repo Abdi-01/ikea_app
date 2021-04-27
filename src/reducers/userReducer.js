@@ -18,6 +18,8 @@ export const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state, cart: action.payload
             }
+        case "LOGOUT":
+            return INITIAL_STATE
         case "LOADING":
             return { ...state, loading: true }
         default:

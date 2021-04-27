@@ -6,7 +6,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCart } from '../actions';
 import CardCart from '../components/cardCart';
-import { URL_API } from '../helper';
+import { createLocalNotification, notifConfiguration, URL_API } from '../helper';
 
 const CartPage = (props) => {
     const dispatch = useDispatch()
@@ -31,25 +31,29 @@ const CartPage = (props) => {
 
     const onBtCheckout = () => {
         // userTransaction = {iduser,username,tgl_transaksi,status,total_payment,detail_pembelian}
-        let date = new Date()
-        axios.post(URL_API + `/userTransaction`, {
-            iduser,
-            username,
-            tgl_transaksi: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
-            total_payment: totalPayment(),
-            status: 'Unpaid',
-            detail_pembelian: cart
-        }).then(res => {
-            axios.patch(URL_API + `/users/${iduser}`, { cart: [] })
-                .then(resPatch => {
-                    dispatch(updateCart(resPatch.data.cart))
-                    props.navigation.navigate("Profile")
-                }).catch(errPatch => {
-                    console.log(errPatch)
-                })
-        }).catch(err => {
-            console.log(err)
-        })
+        if (cart.length > 0) {
+            let date = new Date()
+            axios.post(URL_API + `/userTransaction`, {
+                iduser,
+                username,
+                tgl_transaksi: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+                total_payment: totalPayment(),
+                status: 'Unpaid',
+                detail_pembelian: cart
+            }).then(res => {
+                axios.patch(URL_API + `/users/${iduser}`, { cart: [] })
+                    .then(resPatch => {
+                        dispatch(updateCart(resPatch.data.cart))
+                        notifConfiguration(() => props.navigation.navigate("Transaction"))
+                        createLocalNotification("A1", "Checkout ✔", "Pesanan diproses, silahkan lakukan pembayaran.")
+                        props.navigation.navigate("Profile")
+                    }).catch(errPatch => {
+                        console.log(errPatch)
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
 
     return (

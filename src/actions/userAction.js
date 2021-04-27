@@ -40,6 +40,12 @@ export const onLogin = (username, password) => {
     }
 }
 
+export const onLogout = () => {
+    return async (dispatch) => {
+        await AsyncStorage.removeItem('id_tkn')
+        dispatch({ type: "LOGOUT" })
+    }
+}
 
 export const onKeepLogin = () => {
     return async (dispatch) => {

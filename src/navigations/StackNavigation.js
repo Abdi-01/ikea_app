@@ -6,6 +6,7 @@ import DetailPage from '../pages/detail';
 import TabNavigation from './TabNavigation'
 import { useDispatch } from 'react-redux';
 import { onKeepLogin } from '../actions';
+import TransactionPage from '../pages/transaction';
 
 const Stack = createStackNavigator()
 const StackNavigation = (props) => {
@@ -21,6 +22,7 @@ const StackNavigation = (props) => {
             <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
             <Stack.Screen name="Regis" component={RegisPage} options={{ headerShown: false }} />
             <Stack.Screen name="Detail" component={DetailPage} options={{ headerShown: false }} />
+            <Stack.Screen name="Transaction" component={TransactionPage} />
         </Stack.Navigator>
     )
 }
